@@ -122,7 +122,7 @@ function ParticlePool( poolSize ) {
 
 	this.offScreenPos = new THREE.Vector3( 9999, 9999, 9999 );
 
-	this.pColor = '#ffffff';
+	this.pColor = '#FF4400';
 	this.pSize = 0.6;
 
 	for ( var ii = 0; ii < this.poolSize; ii++ ) {
@@ -306,7 +306,7 @@ function NeuralNetwork() {
 
 	// axon
 	this.axonOpacityMultiplier = 0.5;
-	this.axonColor = '#ffffff';
+	this.axonColor = '#0099FF';
 	this.axonGeom = new THREE.BufferGeometry();
 	this.axonPositions = [];
 	this.axonIndices = [];
@@ -333,7 +333,7 @@ function NeuralNetwork() {
 	// neuron
 	this.neuronSizeMultiplier = 1.0;
 	this.spriteTextureNeuron = TEXTURES.electric;
-	this.neuronColor = '#ffffff';
+	this.neuronColor = '#00FFFF';
 	this.neuronOpacity = 0.75;
 	this.neuronsGeom = new THREE.Geometry();
 
@@ -415,7 +415,7 @@ NeuralNetwork.prototype.initNeurons = function ( inputVertices ) {
 
 	// set neuron attributes value
 	for ( i = 0; i < this.components.neurons.length; i++ ) {
-		this.neuronAttributes.color.value[ i ] = new THREE.Color( '#ffffff' ); // initial neuron color
+		this.neuronAttributes.color.value[ i ] = new THREE.Color( '#00FFFF' ); // initial neuron color
 		this.neuronAttributes.size.value[ i ] = THREE.Math.randFloat( 0.75, 3.0 ); // initial neuron size
 	}
 
@@ -711,7 +711,7 @@ var FRAME_COUNT = 0;
 var sceneSettings = {
 
 	pause: false,
-	bgColor: 0x111113,
+	bgColor: 0x0d0d0f,
 	enableGridHelper: false,
 	enableAxisHelper: false
 
@@ -725,7 +725,7 @@ scene = new THREE.Scene();
 camera = new THREE.PerspectiveCamera( 75, screenRatio, 10, 5000 );
 // camera orbit control
 cameraCtrl = new THREE.OrbitControls( camera, container );
-cameraCtrl.object.position.y = 150;
+cameraCtrl.object.position.y = 70;
 cameraCtrl.update();
 
 // ---- Renderer
@@ -895,9 +895,9 @@ window.addEventListener( 'keypress', function ( event ) {
 } );
 
 
-$( function () {
+window.addEventListener('load', function(){
 	var timerID;
-	$( window ).resize( function () {
+	window.addEventListener('resize', function () {
 		clearTimeout( timerID );
 		timerID = setTimeout( function () {
 			onWindowResize();

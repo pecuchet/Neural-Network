@@ -22,9 +22,9 @@ window.addEventListener( 'keypress', function ( event ) {
 } );
 
 
-$( function () {
+window.addEventListener('load', function(){
 	var timerID;
-	$( window ).resize( function () {
+	window.addEventListener('resize', function () {
 		clearTimeout( timerID );
 		timerID = setTimeout( function () {
 			onWindowResize();

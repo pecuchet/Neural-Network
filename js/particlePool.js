@@ -10,7 +10,7 @@ function ParticlePool( poolSize ) {
 
 	this.offScreenPos = new THREE.Vector3( 9999, 9999, 9999 );
 
-	this.pColor = '#ffffff';
+	this.pColor = '#FF4400';
 	this.pSize = 0.6;
 
 	for ( var ii = 0; ii < this.poolSize; ii++ ) {

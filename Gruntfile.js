@@ -23,7 +23,7 @@ module.exports = function ( grunt ) {
 				dest: 'js/build/app.js'
 			},
 			vendor: {
-				src: [ 'js/vendor/underscore.js', 'js/vendor/jquery.min.js', 'js/vendor/Detector.js', 'js/vendor/dat.gui.min.js',
+				src: [ 'js/vendor/underscore.js', 'js/vendor/Detector.js', 'js/vendor/dat.gui.min.js',
 						 'js/vendor/stats.min.js', 'js/vendor/three.js', 'js/vendor/OrbitControls.js', 'js/vendor/OBJLoader.js' ],
 
 				dest: 'js/vendor/vendor-merge.js'
@@ -43,38 +43,21 @@ module.exports = function ( grunt ) {
 			}
 		},
 		watch: {
-			options: { // global opptions for all watchers
-				livereload: true
+			options: {
 			},
 			js: {
 				files: 'js/*.js',
-				tasks: [ 'concat' ]
-			},
-			html: {
-				files: '*.html'
-			}
-		},
-		connect: {
-			server: {
-				options: {
-					port: 9001,
-					base: '.',
-				}
+				tasks: [ 'build' ]
 			}
 		}
-
 	} );
 
 	// Load the plugin that provides the tasks.
-	grunt.loadNpmTasks( 'grunt-browserify' );
 	grunt.loadNpmTasks( 'grunt-contrib-concat' );
 	grunt.loadNpmTasks( 'grunt-contrib-uglify' );
 	grunt.loadNpmTasks( 'grunt-contrib-watch' );
-	grunt.loadNpmTasks( 'grunt-contrib-connect' );
 
 	// tasks
-	grunt.registerTask( 'default', [ 'watch' ] );
-	grunt.registerTask( 'serve', [ 'connect:server', 'watch' ] );
 	grunt.registerTask( 'build', [ 'concat:build', 'uglify:build' ] );
 	grunt.registerTask( 'vendor', [ 'concat:vendor', 'uglify:vendor' ] );
 };
