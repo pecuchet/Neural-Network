@@ -17,6 +17,7 @@ function update() {
 // ----  draw loop
 function run() {
 
+    TWEEN.update();
 	requestAnimationFrame( run );
 	renderer.setClearColor( sceneSettings.bgColor, 1 );
 	renderer.clear();
