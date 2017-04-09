@@ -22,10 +22,11 @@ var shaderLoader = new THREE.XHRLoader( loadingManager );
 shaderLoader.setResponseType( 'text' );
 
 shaderLoader.loadMultiple = function ( SHADER_CONTAINER, urlObj ) {
+	var keys = Object.keys(urlObj);
 
-	_.each( urlObj, function ( value, key ) {
+    keys.forEach( function ( key ) {
 
-		shaderLoader.load( value, function ( shader ) {
+		shaderLoader.load( urlObj[key], function ( shader ) {
 
 			SHADER_CONTAINER[ key ] = shader;
 
