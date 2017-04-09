@@ -206,7 +206,7 @@ NeuralNetwork.prototype.initAxons = function () {
 
 
 	var numNotConnected = 0;
-	for ( i = 0; i < allNeuronsLength; i++ ) {
+	for ( var i = 0; i < allNeuronsLength; i++ ) {
 		if ( !this.components.neurons[ i ].connection[ 0 ] ) {
 			numNotConnected += 1;
 		}
@@ -308,7 +308,7 @@ NeuralNetwork.prototype.releaseSignalAt = function ( neuron ) {
 NeuralNetwork.prototype.resetAllNeurons = function () {
 
 	this.numPassive = 0;
-	for ( var ii = 0; ii < this.components.neurons.length; ii++ ) { // reset all neuron state
+	for ( var ii = 0, n; ii < this.components.neurons.length; ii++ ) { // reset all neuron state
 		n = this.components.neurons[ ii ];
 
 		if ( !n.fired ) {
