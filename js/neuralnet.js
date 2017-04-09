@@ -332,7 +332,7 @@ NeuralNetwork.prototype.updateSettings = function () {
 
 	this.neuronUniforms.opacity.value = this.neuronOpacity;
 
-	for ( i = 0; i < this.components.neurons.length; i++ ) {
+	for ( var i = 0; i < this.components.neurons.length; i++ ) {
 		this.neuronAttributes.color.value[ i ].setStyle( this.neuronColor ); // initial neuron color
 	}
 	this.neuronAttributes.color.needsUpdate = true;
