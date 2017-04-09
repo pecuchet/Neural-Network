@@ -474,7 +474,7 @@ NeuralNetwork.prototype.initAxons = function () {
 
 
 	var numNotConnected = 0;
-	for ( i = 0; i < allNeuronsLength; i++ ) {
+	for ( var i = 0; i < allNeuronsLength; i++ ) {
 		if ( !this.components.neurons[ i ].connection[ 0 ] ) {
 			numNotConnected += 1;
 		}
@@ -576,7 +576,7 @@ NeuralNetwork.prototype.releaseSignalAt = function ( neuron ) {
 NeuralNetwork.prototype.resetAllNeurons = function () {
 
 	this.numPassive = 0;
-	for ( var ii = 0; ii < this.components.neurons.length; ii++ ) { // reset all neuron state
+	for ( var ii = 0, n; ii < this.components.neurons.length; ii++ ) { // reset all neuron state
 		n = this.components.neurons[ ii ];
 
 		if ( !n.fired ) {
@@ -600,7 +600,7 @@ NeuralNetwork.prototype.updateSettings = function () {
 
 	this.neuronUniforms.opacity.value = this.neuronOpacity;
 
-	for ( i = 0; i < this.components.neurons.length; i++ ) {
+	for ( var i = 0; i < this.components.neurons.length; i++ ) {
 		this.neuronAttributes.color.value[ i ].setStyle( this.neuronColor ); // initial neuron color
 	}
 	this.neuronAttributes.color.needsUpdate = true;
@@ -648,10 +648,11 @@ var shaderLoader = new THREE.XHRLoader( loadingManager );
 shaderLoader.setResponseType( 'text' );
 
 shaderLoader.loadMultiple = function ( SHADER_CONTAINER, urlObj ) {
+	var keys = Object.keys(urlObj);
 
-	_.each( urlObj, function ( value, key ) {
+    keys.forEach( function ( key ) {
 
-		shaderLoader.load( value, function ( shader ) {
+		shaderLoader.load( urlObj[key], function ( shader ) {
 
 			SHADER_CONTAINER[ key ] = shader;
 
@@ -842,6 +843,53 @@ function updateGuiInfo() {
 	}
 }
 
+// Camera Movements --------------------------------------------------------
+
+var debug = 1,
+    mayTravel = 1,
+    duration = 600,
+    xRange = [-69, 69],
+    yRange = [-69, 69],
+    zRange = [-69, 69];
+
+function random(min, max) {
+    return Math.floor(Math.random() * (max - min)) + min;
+}
+
+if (debug) {
+    console.log(camera.position);
+    container.addEventListener( 'mouseup', function(){
+        console.log(camera.position);
+    }, false );
+}
+
+function travel () {
+    var from = {
+            x: camera.position.x,
+            y: camera.position.y,
+            z: camera.position.z
+        },
+        to = {
+            x: random(xRange[0], xRange[1]),
+            y: random(yRange[0], yRange[1]),
+            z: random(zRange[0], zRange[1])
+        };
+
+    mayTravel = 0;
+
+    new TWEEN.Tween(from)
+        .to(to, duration)
+        .easing(TWEEN.Easing.Linear.None)
+        .onUpdate(function () {
+            camera.position.set(this.x, this.y, this.z);
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+        })
+        .onComplete(function () {
+            camera.lookAt(new THREE.Vector3(0, 0, 0));
+            mayTravel = 1;
+        })
+        .start();
+}
 // Run --------------------------------------------------------
 
 function update() {
@@ -861,6 +909,7 @@ function update() {
 // ----  draw loop
 function run() {
 
+    TWEEN.update();
 	requestAnimationFrame( run );
 	renderer.setClearColor( sceneSettings.bgColor, 1 );
 	renderer.clear();

@@ -18,15 +18,24 @@ module.exports = function ( grunt ) {
 			},
 			build: {
 				src: [ 'js/neuron.js', 'js/signal.js', 'js/particlePool.js', 'js/particle.js', 'js/axon.js', 'js/neuralNet.js',
-						 'js/loaders.js', 'js/scene.js', 'js/main.js', 'js/gui.js', 'js/run.js', 'js/events.js' ],
+						 'js/loaders.js', 'js/scene.js', 'js/main.js', 'js/gui.js', 'js/cameraTravel.js', 'js/run.js', 'js/events.js' ],
 
 				dest: 'js/build/app.js'
 			},
 			vendor: {
-				src: [ 'js/vendor/underscore.js', 'js/vendor/Detector.js', 'js/vendor/dat.gui.min.js', 'js/vendor/stats.min.js',
+				src: [ 'js/vendor/Detector.js', 'js/vendor/dat.gui.min.js', 'js/vendor/stats.min.js',
 						  'js/vendor/three.js', 'js/vendor/OrbitControls.js', 'js/vendor/OBJLoader.js', 'js/vendor/Tween.js' ],
 
 				dest: 'js/vendor/vendor-merge.js'
+			},
+			module: {
+				src: [
+					'js/moduleIn.js',
+					'js/vendor/vendor-merge.js',
+					'js/build/app.js',
+					'js/moduleOut.js'
+				],
+				dest: 'js/build/module.js'
 			}
 		},
 		uglify: {
@@ -40,6 +49,11 @@ module.exports = function ( grunt ) {
 				src: [ 'js/vendor/vendor-merge.js' ],
 				dest: 'js/vendor/vendor-merge.min.js',
 				sourceMap: false
+			},
+			module: {
+				src: [ 'js/build/module.js' ],
+				dest: 'js/build/module.min.js',
+				sourceMap: true
 			}
 		},
 		watch: {
@@ -47,7 +61,7 @@ module.exports = function ( grunt ) {
 			},
 			js: {
 				files: 'js/*.js',
-				tasks: [ 'build' ]
+				tasks: [ 'module' ]
 			}
 		}
 	} );
@@ -60,4 +74,5 @@ module.exports = function ( grunt ) {
 	// tasks
 	grunt.registerTask( 'build', [ 'concat:build', 'uglify:build' ] );
 	grunt.registerTask( 'vendor', [ 'concat:vendor', 'uglify:vendor' ] );
+    grunt.registerTask( 'module', [ 'concat:build', 'uglify:build', 'concat:module', 'uglify:module' ] );
 };
