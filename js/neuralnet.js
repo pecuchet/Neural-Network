@@ -1,32 +1,30 @@
 // Neural Network --------------------------------------------------------
 
-function NeuralNetwork() {
-
-	this.initialized = false;
-
-	this.settings = {
-		/*default
-		verticesSkipStep       : 2,
-		maxAxonDist            : 10,
-		maxConnectionsPerNeuron: 6,
-		signalMinSpeed         : 1.75,
-		signalMaxSpeed         : 3.25,
-		currentMaxSignals      : 3000,
-		limitSignals           : 10000
-		*/
-
-		verticesSkipStep: 2,
+var defaults = {
+		verticesSkipStep: 3,
 		maxAxonDist: 10,
 		maxConnectionsPerNeuron: 6,
+		signalSize: .6,
+	    signalColor: '#FF4400',
 		signalMinSpeed: 1.75,
 		signalMaxSpeed: 3.25,
 		currentMaxSignals: 3000,
-		limitSignals: 10000
-
+		limitSignals: 10000,
+    	axonColor: '#0099FF',
+    	axonOpacityMultiplier: .5,
+    	neuronSizeMultiplier: 1.0,
+		neuronColor: '#00FFFF',
+		neuronOpacity: .75
 	};
 
+function NeuralNetwork(settings) {
+
+	this.initialized = false;
+
+    this.settings = extend( defaults, settings || {} );
+
 	this.meshComponents = new THREE.Object3D();
-	this.particlePool = new ParticlePool( this.settings.limitSignals );
+	this.particlePool = new ParticlePool( this.settings );
 	this.meshComponents.add( this.particlePool.meshComponents );
 
 	// NN component containers
@@ -37,8 +35,6 @@ function NeuralNetwork() {
 	};
 
 	// axon
-	this.axonOpacityMultiplier = 0.5;
-	this.axonColor = '#0099FF';
 	this.axonGeom = new THREE.BufferGeometry();
 	this.axonPositions = [];
 	this.axonIndices = [];
@@ -47,11 +43,11 @@ function NeuralNetwork() {
 	this.axonUniforms = {
 		color: {
 			type: 'c',
-			value: new THREE.Color( this.axonColor )
+			value: new THREE.Color( this.settings.axonColor )
 		},
 		opacityMultiplier: {
 			type: 'f',
-			value: this.axonOpacityMultiplier
+			value: this.settings.axonOpacityMultiplier
 		}
 	};
 
@@ -63,20 +59,17 @@ function NeuralNetwork() {
 	};
 
 	// neuron
-	this.neuronSizeMultiplier = 1.0;
 	this.spriteTextureNeuron = TEXTURES.electric;
-	this.neuronColor = '#00FFFF';
-	this.neuronOpacity = 0.75;
 	this.neuronsGeom = new THREE.Geometry();
 
 	this.neuronUniforms = {
 		sizeMultiplier: {
 			type: 'f',
-			value: this.neuronSizeMultiplier
+			value: this.settings.neuronSizeMultiplier
 		},
 		opacity: {
 			type: 'f',
-			value: this.neuronOpacity
+			value: this.settings.neuronOpacity
 		},
 		texture: {
 			type: 't',
@@ -147,7 +140,7 @@ NeuralNetwork.prototype.initNeurons = function ( inputVertices ) {
 
 	// set neuron attributes value
 	for ( i = 0; i < this.components.neurons.length; i++ ) {
-		this.neuronAttributes.color.value[ i ] = new THREE.Color( '#00FFFF' ); // initial neuron color
+		this.neuronAttributes.color.value[ i ] = new THREE.Color( this.settings.neuronColor ); // initial neuron color
 		this.neuronAttributes.size.value[ i ] = THREE.Math.randFloat( 0.75, 3.0 ); // initial neuron size
 	}
 
@@ -178,7 +171,7 @@ NeuralNetwork.prototype.initAxons = function () {
 	}
 
 	// enable WebGL 32 bit index buffer or get an error
-	if ( !renderer.getContext().getExtension( "OES_element_index_uint" ) ) {
+	if ( !getAppInstance().renderer.getContext().getExtension( "OES_element_index_uint" ) ) {
 		console.error( "32bit index buffer not supported!" );
 	}
 
@@ -211,8 +204,10 @@ NeuralNetwork.prototype.initAxons = function () {
 			numNotConnected += 1;
 		}
 	}
-	console.log( 'numNotConnected =', numNotConnected );
 
+	if (this.settings.debug) {
+        console.log( 'Number not connected neurons', numNotConnected );
+	}
 };
 
 NeuralNetwork.prototype.update = function ( deltaTime ) {
@@ -330,17 +325,17 @@ NeuralNetwork.prototype.updateInfo = function () {
 
 NeuralNetwork.prototype.updateSettings = function () {
 
-	this.neuronUniforms.opacity.value = this.neuronOpacity;
+	this.neuronUniforms.opacity.value = this.settings.neuronOpacity;
 
 	for ( var i = 0; i < this.components.neurons.length; i++ ) {
-		this.neuronAttributes.color.value[ i ].setStyle( this.neuronColor ); // initial neuron color
+		this.neuronAttributes.color.value[ i ].setStyle( this.settings.neuronColor ); // initial neuron color
 	}
 	this.neuronAttributes.color.needsUpdate = true;
 
-	this.neuronUniforms.sizeMultiplier.value = this.neuronSizeMultiplier;
+	this.neuronUniforms.sizeMultiplier.value = this.settings.neuronSizeMultiplier;
 
-	this.axonUniforms.color.value.set( this.axonColor );
-	this.axonUniforms.opacityMultiplier.value = this.axonOpacityMultiplier;
+	this.axonUniforms.color.value.set( this.settings.axonColor );
+	this.axonUniforms.opacityMultiplier.value = this.settings.axonOpacityMultiplier;
 
 	this.particlePool.updateSettings();
 

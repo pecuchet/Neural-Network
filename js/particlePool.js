@@ -1,17 +1,17 @@
 // Particle Pool ---------------------------------------------------------
 
-function ParticlePool( poolSize ) {
+function ParticlePool( settings ) {
 
 	this.spriteTextureSignal = TEXTURES.electric;
 
-	this.poolSize = poolSize;
+	this.poolSize = settings.limitSignals;
 	this.pGeom = new THREE.Geometry();
 	this.particles = this.pGeom.vertices;
 
 	this.offScreenPos = new THREE.Vector3( 9999, 9999, 9999 );
 
-	this.pColor = '#FF4400';
-	this.pSize = 0.6;
+	this.pColor = settings.signalColor;
+	this.pSize = settings.signalSize;
 
 	for ( var ii = 0; ii < this.poolSize; ii++ ) {
 		this.particles[ ii ] = new Particle( this );
