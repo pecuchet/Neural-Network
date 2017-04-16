@@ -6,16 +6,16 @@ var SHADER_CONTAINER = {},
     app,
     appDefaults = {
         debug: 1,
-        baseURL: '',
-        testSupport: 0,
-        pause: 0,
+        baseURL: '',       // for assets
+        testSupport: 0,    // on instantiation
+        pause: 0,          // pause signal animation
         runOnLoad: 1,
         spinner: document.getElementById( 'loading' ),
         bgColor: 0x0d0d0f,
-        gui: 1,
-        stats: 1,
-        enableHelpers: 1,
-        mouseInterface: 1,
+        gui: 1,             // use graphical interface
+        stats: 1,           // show fps stats
+        enableHelpers: 1,   // perspective helpers
+        mouseInterface: 1,  // enable OrbitControls
         initialPosition: {
             x: 61,
             y: 51,
@@ -24,7 +24,7 @@ var SHADER_CONTAINER = {},
         neuralNet: {
             /* see  neuralnet.js */
             },
-        travel: {
+        travel: {             // camera movements
             easing: TWEEN.Easing.Quadratic.Out,
             duration: 600,
             range: {
