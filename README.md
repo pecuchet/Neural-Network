@@ -30,7 +30,7 @@ Shortcut to Three.js' ``addEventlistener`, currently implemented events:
 - ``travelUpdate``, when Tween.js updates camera position
 - ``travelEnd``, when Tween.js completes
 
-#### neuralNet.rendered
+#### neuralNet.renderer
 
 Three.js WebGLRenderer instance
 
