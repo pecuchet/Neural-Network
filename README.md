@@ -1,7 +1,9 @@
 # Neural Network
 
-Same as [nxxcxx/Neural-Network](https://github.com/nxxcxx/Neural-Network) except code has been grouped into a module,
-exposing public settings and methods to interact with and animate the neural network.
+Same as [nxxcxx/Neural-Network](https://github.com/nxxcxx/Neural-Network), except code has been grouped into a module,
+exposing public settings and methods to interact with the neural network. Basic methods have also been added 
+to animate the camera (randomly or to a specific 3D point). The camera movements is done through Tween.js, which
+is setup to fire events during animation.
 
 ([original demo](http://nxxcxx.github.io/Neural-Network/))  
 
@@ -9,7 +11,7 @@ exposing public settings and methods to interact with and animate the neural net
 
 #### neuralNet(settings)
 
-Instantiate the neural network load the assets, and returns the instance to interact with it
+Instantiates the neural network, loads the assets, and returns the instance to interact with it
 
 #### neuralNet.camera
 
@@ -21,12 +23,12 @@ Test browser support for Three.js
 
 #### neuralNet.on(type, callback)
 
-Shortcut to Three.js' ``addEventlistener`, currently implemented event:
+Shortcut to Three.js' ``addEventlistener`, currently implemented events:
 - ``loaded``, fire when assets are loaded
 - ``loading``, on progress load handler
 - ``travelStart``, when starting camera movement
 - ``travelUpdate``, when Tween.js updates camera position
-- ``travelEnd``, when Tween.jhs completes
+- ``travelEnd``, when Tween.js completes
 
 #### neuralNet.rendered
 
@@ -70,7 +72,7 @@ Three.js WebGLRenderer instance
     travel: {             // camera movements
         easing: TWEEN.Easing.Quadratic.Out,
         duration: 600,
-        range: {
+        range: {         // for travelRandom, min-max values for the camera position
             x: [0, 69],
             y: [0, 69],
             z: [0, 69]
@@ -87,11 +89,11 @@ Start the rendering (if not already started with ``runOnLoad`` above)
 
 #### neuralNet.travel(to, duration)
 
-Dispatches the travel* event listed above.
+Dispatches the ``travel*`` events listed above.
 
 #### neuralNet.travelRandom(duration)
 
-Dispatches the travel* event listed above.
+Dispatches the ``travel*`` events listed above.
   
   
 ![](https://raw.githubusercontent.com/nxxcxx/Neural-Network/gh-pages/screenshot.jpg)
