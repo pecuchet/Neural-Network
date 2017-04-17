@@ -2,7 +2,7 @@
 
 Same as [nxxcxx/Neural-Network](https://github.com/nxxcxx/Neural-Network), except code has been grouped into a module,
 exposing public settings and methods to interact with the neural network. Basic methods have also been added 
-to animate the camera (randomly or to a specific 3D point). The camera movements is done through Tween.js, which
+to animate the camera (randomly or to a specific 3D point). The camera movements are done through Tween.js, which
 is setup to fire events during animation.
 
 ([original demo](http://nxxcxx.github.io/Neural-Network/))  
@@ -85,14 +85,21 @@ Three.js Scene instance
 
 #### neuralNet.start()
 
-Start the rendering (if not already started with ``runOnLoad`` above)
+Start the rendering (if not already started). Can be started automatically with ``runOnLoad`` in the ``settings`` object.  
 
 #### neuralNet.travel(to, duration)
 
+Takes an object with ``x``, ``y`` and ``z`` as properties, a float as ``duration`` or defaults to ``settings.travel.duration``.  
+Dispatches the ``travel*`` events listed above.
+
+#### neuralNet.travelAlong(axis, distance, duration)
+
+Takes a string with 'x' 'y' or 'z' as value for ``axis`` and a float for distance and duration.  
 Dispatches the ``travel*`` events listed above.
 
 #### neuralNet.travelRandom(duration)
 
+Randomly animate the camera position. The random position is constrained by ``settings.travel.range`` ``x``, ``y`` and ``z``.  
 Dispatches the ``travel*`` events listed above.
   
   
