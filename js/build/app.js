@@ -870,6 +870,47 @@ App.prototype.travel = function(to, duration) {
     return this;
 };
 
+App.prototype.travelAlong = function(axis, distance, duration){
+    var self = this,
+        settings = self.settings.travel;
+
+    if (!self.canTravel) return;
+
+    new TWEEN.Tween({distance:0})
+        .to({distance: distance}, duration || settings.duration)
+        .easing(settings.easing)
+        .onStart(function(){
+            self.canTravel = 0;
+            self.scene.dispatchEvent({
+                type: 'travelStart',
+                position: self.camera.position,
+                distance: distance
+            });
+        })
+        .onUpdate(function () {
+            self.camera['translate' + axis.toUpperCase()](this.distance);
+            self.camera.lookAt(new THREE.Vector3(0, 0, 0));
+            self.scene.dispatchEvent({
+                type: 'travelUpdate',
+                position: self.camera.position,
+                distance: this.distance
+            });
+        })
+        .onComplete(function () {
+            self.camera['translate' + axis.toUpperCase()](this.distance);
+            self.camera.lookAt(new THREE.Vector3(0, 0, 0));
+            self.scene.dispatchEvent({
+                type: 'travelEnd',
+                position: self.camera.position,
+                distance: this.distance
+            });
+            self.canTravel = 1;
+        })
+        .start();
+
+    return this;
+};
+
 // Helpers -------------------------------------------------------------------------------------------------------------
 
 App.prototype.checkSupport = function () {
