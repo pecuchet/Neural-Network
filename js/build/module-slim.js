@@ -35927,7 +35927,7 @@ NeuralNetwork.prototype.initAxons = function () {
 
 	// enable WebGL 32 bit index buffer or get an error
 	if ( !getAppInstance().renderer.getContext().getExtension( "OES_element_index_uint" ) ) {
-		console.error( "32bit index buffer not supported!" );
+		console.error( 'NeuralNet: 32bit index buffer not supported!' );
 	}
 
 	var axonIndices = new Uint32Array( this.axonIndices );
@@ -35961,7 +35961,7 @@ NeuralNetwork.prototype.initAxons = function () {
 	}
 
 	if (this.settings.debug) {
-        console.log( 'Number not connected neurons', numNotConnected );
+        console.log( 'NeuralNet: number not connected neurons', numNotConnected );
 	}
 };
 
@@ -36113,17 +36113,17 @@ var SHADER_CONTAINER = {},
     TEXTURES = {},
     app,
     appDefaults = {
-        debug: 0,
-        baseURL: '',
-        testSupport: 0,
-        pause: 0,
-        runOnLoad: 0,
+        debug: 1,
+        baseURL: '',       // for assets
+        testSupport: 0,    // on instantiation
+        pause: 0,          // pause signal animation
+        runOnLoad: 1,
         spinner: document.getElementById( 'loading' ),
         bgColor: 0x0d0d0f,
-        gui: 0,
-        stats: 0,
-        enableHelpers: 0,
-        mouseInterface: 0,
+        gui: 1,             // use graphical interface
+        stats: 1,           // show fps stats
+        enableHelpers: 1,   // perspective helpers
+        mouseInterface: 1,  // enable OrbitControls
         initialPosition: {
             x: 61,
             y: 51,
@@ -36132,7 +36132,7 @@ var SHADER_CONTAINER = {},
         neuralNet: {
             /* see  neuralnet.js */
             },
-        travel: {
+        travel: {             // camera movements
             easing: TWEEN.Easing.Quadratic.Out,
             duration: 600,
             range: {
@@ -36260,6 +36260,9 @@ function run () {
 
 App.prototype.start = function () {
     if (this.isRunning) { return this; }
+    if (this.settings.debug) {
+        console.log( 'NeuralNet: starting up network.' );
+    }
     this.neuralNet = new NeuralNetwork(this.settings.neuralNet);
     this.scene.add( this.neuralNet.meshComponents );
     if (this.settings.gui) {
@@ -36334,6 +36337,47 @@ App.prototype.travel = function(to, duration) {
     return this;
 };
 
+App.prototype.travelAlong = function(axis, distance, duration){
+    var self = this,
+        settings = self.settings.travel;
+
+    if (!self.canTravel) return;
+
+    new TWEEN.Tween({distance:0})
+        .to({distance: distance}, duration || settings.duration)
+        .easing(settings.easing)
+        .onStart(function(){
+            self.canTravel = 0;
+            self.scene.dispatchEvent({
+                type: 'travelStart',
+                position: self.camera.position,
+                distance: distance
+            });
+        })
+        .onUpdate(function () {
+            self.camera['translate' + axis.toUpperCase()](this.distance);
+            self.camera.lookAt(new THREE.Vector3(0, 0, 0));
+            self.scene.dispatchEvent({
+                type: 'travelUpdate',
+                position: self.camera.position,
+                distance: this.distance
+            });
+        })
+        .onComplete(function () {
+            self.camera['translate' + axis.toUpperCase()](this.distance);
+            self.camera.lookAt(new THREE.Vector3(0, 0, 0));
+            self.scene.dispatchEvent({
+                type: 'travelEnd',
+                position: self.camera.position,
+                distance: this.distance
+            });
+            self.canTravel = 1;
+        })
+        .start();
+
+    return this;
+};
+
 // Helpers -------------------------------------------------------------------------------------------------------------
 
 App.prototype.checkSupport = function () {
@@ -36355,17 +36399,15 @@ App.prototype.onWindowResize = function () {
 function bindDOMEvents () {
     var self = this,
         settings = self.settings,
+        timerID = null,
         win = window;
 
     // delay resize handler
-    win.addEventListener('load', function(){
-        var timerID;
-        win.addEventListener('resize', function () {
-            clearTimeout( timerID );
-            timerID = setTimeout( function () {
-                self.onWindowResize();
-            }, 250 );
-        } );
+    win.addEventListener('resize', function () {
+        clearTimeout( timerID );
+        timerID = setTimeout( function () {
+            self.onWindowResize();
+        }, 250 );
     } );
 
     if (settings.enableHelpers) {
@@ -36403,7 +36445,7 @@ App.prototype.load = function () {
             settings.spinner.style.display = 'none';
         }
         if (settings.debug) {
-            console.log( 'Done loading.' );
+            console.log( 'NeuralNet: done loading assets.' );
         }
         self.scene.dispatchEvent({
             type: 'loaded'
@@ -36421,7 +36463,7 @@ App.prototype.load = function () {
             total: total
         });
         if (settings.debug) {
-            console.log( loaded + '/' + total, item );
+            console.log( 'NeuralNet: loading ' + loaded + '/' + total, item );
         }
     };
 
@@ -36459,7 +36501,7 @@ App.prototype.load = function () {
     OBJloader.load( baseURL + 'models/brain_vertex_low.obj', function ( model ) {
 
         if (settings.debug) {
-            console.log('Original vertices count', model.children[0].geometry.vertices.length );
+            console.log( 'NeuralNet: original vertices count', model.children[0].geometry.vertices.length );
         }
 
         OBJ_MODELS.brain = model.children[ 0 ];

@@ -23,7 +23,7 @@ Test browser support for Three.js
 
 #### neuralNet.on(type, callback)
 
-Shortcut to Three.js' ``addEventlistener`, currently implemented events:
+Shortcut to Three.js' ``addEventlistener``, currently implemented events:
 - ``loaded``, fire when assets are loaded
 - ``loading``, on progress load handler
 - ``travelStart``, when starting camera movement

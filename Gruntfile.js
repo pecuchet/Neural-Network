@@ -93,4 +93,6 @@ module.exports = function ( grunt ) {
     grunt.registerTask( 'vendor-slim', [ 'concat:vendorSlim', 'uglify:vendorSlim' ] );
     grunt.registerTask( 'module-all', [ 'concat:build', 'uglify:build', 'concat:moduleAll', 'uglify:moduleAll' ] );
     grunt.registerTask( 'module-slim', [ 'concat:build', 'uglify:build', 'concat:moduleSlim', 'uglify:moduleSlim' ] );
+
+    grunt.registerTask( 'default', ['vendor-all', 'vendor-slim', 'module-all', 'module-slim'] );
 };

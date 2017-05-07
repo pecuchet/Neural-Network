@@ -152,6 +152,9 @@ function run () {
 
 App.prototype.start = function () {
     if (this.isRunning) { return this; }
+    if (this.settings.debug) {
+        console.log( 'NeuralNet: starting up network.' );
+    }
     this.neuralNet = new NeuralNetwork(this.settings.neuralNet);
     this.scene.add( this.neuralNet.meshComponents );
     if (this.settings.gui) {
@@ -288,17 +291,15 @@ App.prototype.onWindowResize = function () {
 function bindDOMEvents () {
     var self = this,
         settings = self.settings,
+        timerID = null,
         win = window;
 
     // delay resize handler
-    win.addEventListener('load', function(){
-        var timerID;
-        win.addEventListener('resize', function () {
-            clearTimeout( timerID );
-            timerID = setTimeout( function () {
-                self.onWindowResize();
-            }, 250 );
-        } );
+    win.addEventListener('resize', function () {
+        clearTimeout( timerID );
+        timerID = setTimeout( function () {
+            self.onWindowResize();
+        }, 250 );
     } );
 
     if (settings.enableHelpers) {
@@ -336,7 +337,7 @@ App.prototype.load = function () {
             settings.spinner.style.display = 'none';
         }
         if (settings.debug) {
-            console.log( 'Done loading.' );
+            console.log( 'NeuralNet: done loading assets.' );
         }
         self.scene.dispatchEvent({
             type: 'loaded'
@@ -354,7 +355,7 @@ App.prototype.load = function () {
             total: total
         });
         if (settings.debug) {
-            console.log( loaded + '/' + total, item );
+            console.log( 'NeuralNet: loading ' + loaded + '/' + total, item );
         }
     };
 
@@ -392,7 +393,7 @@ App.prototype.load = function () {
     OBJloader.load( baseURL + 'models/brain_vertex_low.obj', function ( model ) {
 
         if (settings.debug) {
-            console.log('Original vertices count', model.children[0].geometry.vertices.length );
+            console.log( 'NeuralNet: original vertices count', model.children[0].geometry.vertices.length );
         }
 
         OBJ_MODELS.brain = model.children[ 0 ];

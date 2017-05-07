@@ -35719,7 +35719,7 @@ THREE.OrbitControls = function ( object, domElement ) {
 		document.removeEventListener( 'mouseup', onMouseUp, false );
 		scope.dispatchEvent( endEvent );
 		state = STATE.NONE;
-		console.log(getAppInstance().camera.position);
+
 	}
 
 	function onMouseWheel( event ) {

@@ -172,7 +172,7 @@ NeuralNetwork.prototype.initAxons = function () {
 
 	// enable WebGL 32 bit index buffer or get an error
 	if ( !getAppInstance().renderer.getContext().getExtension( "OES_element_index_uint" ) ) {
-		console.error( "32bit index buffer not supported!" );
+		console.error( 'NeuralNet: 32bit index buffer not supported!' );
 	}
 
 	var axonIndices = new Uint32Array( this.axonIndices );
@@ -206,7 +206,7 @@ NeuralNetwork.prototype.initAxons = function () {
 	}
 
 	if (this.settings.debug) {
-        console.log( 'Number not connected neurons', numNotConnected );
+        console.log( 'NeuralNet: number not connected neurons', numNotConnected );
 	}
 };
 
